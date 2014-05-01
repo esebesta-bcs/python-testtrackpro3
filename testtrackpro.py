@@ -187,17 +187,22 @@ import xml.sax._exceptions  #.SAXParseException
 import suds.plugin     ## cleanup TestTrack data vs dateTime WSDL errors
 import suds.mx.encoded ## monkey patch for polymorphic arrays
 
-__version__ = [1,0,1]
+__version__ = [1,0,2]
 __version_string__ = '.'.join(str(x) for x in __version__)
 
-__author__ = 'Doug Napoleone'
-__email__ = 'doug.napoleone+testtrackpro@gmail.com'
+__author__ = 'Anthony Burchette'
+__email__ = 'awburchette+testtrackpro@gmail.com'
+__original_author__ = 'Doug Napoleone'
+__original_author_email__ = 'doug.napoleone+testtrackpro@gmail.com'
 
 
 _bad_date_as_datetime_re = re.compile(
     '\<element name="(?P<name>date(?!time)[a-z]+|[a-z]+date|date)" type="xsd:dateTime"')
 _bad_date_as_datetime_replace = '<element name="\g<name>" type="xsd:date"'
 
+# Modification by: Anthony Burchette (Technical Support Specialist at Seapine Software)
+# Modification: Removed this plugin from the plugins list on line 316. 
+# As of TestTrack 2014.0.1 (possibly earlier) this fix is longer needed as xsd:date and xsd:dateTime are now in the correct locations in the ttsoapcgi.wsdl
 class _TTPWSDLFixPlugin(suds.plugin.DocumentPlugin):
     """There is a very bad bug in the TestTrack WSDL. There are a number
     of entries that set the type to be 'dateTime' when the data returned
@@ -311,7 +316,7 @@ class TTP(object):
         
         if not plugins:
             plugins = []
-        plugins.append(_ttpwsdlfixplugin)
+        # plugins.append(_ttpwsdlfixplugin) # See note on line 201
         
         try:
             self._client = suds.client.Client(
