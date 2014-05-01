@@ -2,12 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="testtrackpro",
-    version='1.0.1',
+    version='1.0.2',
     description="Python interface to TestTrackPro SOAP API",
     long_description=open('README.rst').read(),
-    url="https://github.com/dougn/python-testtrackpro/",
-    author="Doug Napoleone",
-    author_email="doug.napoleone+testtrackpro@gmail.com",
+    url="https://github.com/awburchette/python-testtrackpro",
+    author="Anthony Burchette",
+    author_email="awburchette+testtrackpro@gmail.com",
+    original_author="Doug Napoleone",
+    original_author_email="doug.napoleone+testtrackpro@gmail.com",
     license="BSD",
     py_modules=['testtrackpro'],
     classifiers=[
