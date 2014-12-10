@@ -177,10 +177,10 @@ import re
 import suds
 import contextlib
 import functools
-import urlparse
+import urllib.parse
 
 ## Exception Error Transformations
-import urllib2 #.URLError
+import urllib.request, urllib.error, urllib.parse #.URLError
 import xml.sax._exceptions  #.SAXParseException
 
 ## Deal with TestTrackPro WSDL non-conformities
@@ -238,7 +238,7 @@ class TTPAPIError(Exception):
                 self._document = self.args[0].document
             if hasattr(self.args[0], 'reason'):
                 self._reason = self.args[0].reason
-            if isinstance(self.args[0], basestring):
+            if isinstance(self.args[0], str):
                 self._reason = self.args[0]
         self._reason = self.message
         
@@ -303,7 +303,7 @@ class TTP(object):
         self.__method_cache = {}
         if not url.endswith('ttsoapcgi.wsdl'):
             if url.endswith('ttsoapcgi.exe'):
-                url = urlparse.urlunsplit(urlparse.urlparse(url)[:2]+('',)*3)
+                url = urllib.parse.urlunsplit(urllib.parse.urlparse(url)[:2]+('',)*3)
             if not url.endswith('/'):
                 url += '/'
             url += 'ttsoapcgi.wsdl'
@@ -321,9 +321,9 @@ class TTP(object):
         try:
             self._client = suds.client.Client(
                 self._wsdl_url, cache=None, plugins=plugins)
-        except urllib2.URLError, e:
+        except urllib.error.URLError as e:
             raise TTPConnectionError(e)
-        except xml.sax._exceptions.SAXParseException, e:
+        except xml.sax._exceptions.SAXParseException as e:
             raise TTPConnectionError(
                 "Library could not connect to the TestTrackPro Soap API.  "
                 "Either this installation of TestTrackPro does not support "
@@ -336,9 +336,9 @@ class TTP(object):
     def _call_method(self, method, *args, **kwdargs):
         try:
             return method(self._cookie, *args, **kwdargs)
-        except urllib2.URLError, e:
+        except urllib.error.URLError as e:
             raise TTPConnectionError(e)
-        except suds.WebFault, e:
+        except suds.WebFault as e:
             raise TTPAPIError(e)
     
     def _call_context_method(self, method_name, table, modifier, method,
@@ -366,7 +366,7 @@ class TTP(object):
     def _build_partial(self, method_name):
         try:
             method = getattr(self._client.service, method_name)
-        except suds.MethodNotFound, e:
+        except suds.MethodNotFound as e:
             raise TTPAPIError(e)
         return functools.partial(self._call_method, method)
         
@@ -389,10 +389,10 @@ class TTP(object):
             raise AttributeError("'%s' Object has no such attribute '%s'" %
                                  self.__class__.__name__, name)
         try:
-            if not self.__method_cache.has_key(name):
+            if name not in self.__method_cache:
                 method = getattr(self._client.service, name)
                 self.__method_cache[name] = self.__build_method(name, method)
-        except suds.MethodNotFound, e:
+        except suds.MethodNotFound as e:
             raise TTPAPIError(e)
         return self.__method_cache[name]
         
@@ -570,9 +570,9 @@ class TTP(object):
         
         try:
             result = self._client.service.getProjectList(username, password)
-        except urllib2.URLError, e:
+        except urllib.error.URLError as e:
             raise TTPConnectionError(e)
-        except suds.WebFault, e:
+        except suds.WebFault as e:
             raise TTPLogonError(e)
         return result
 
@@ -620,9 +620,9 @@ class TTP(object):
         try:
             self._cookie = self._client.service.ProjectLogon(
                 CProject, self._username, self._password)
-        except urllib2.URLError, e:
+        except urllib.error.URLError as e:
             raise TTPConnectionError(e)
-        except suds.WebFault, e:
+        except suds.WebFault as e:
             raise TTPLogonError(e)
             
     def DatabaseLogon(self, database_name=None, username=None, password=None):
@@ -662,9 +662,9 @@ class TTP(object):
         try:
             self._cookie = self._client.service.DatabaseLogon(
                 self._database_name, self._username, self._password)
-        except urllib2.URLError, e:
+        except urllib.error.URLError as e:
             raise TTPConnectionError(e)
-        except suds.WebFault, e:
+        except suds.WebFault as e:
             raise TTPLogonError(e)
             
     def DatabaseLogoff(self, ignore_exceptions=False):
@@ -685,7 +685,7 @@ class TTP(object):
         try:
             self._client.service.DatabaseLogoff(self._cookie)
             self._cookie = None
-        except Exception, e:
+        except Exception as e:
             self._cookie = None
             if str(e) != "Server raised fault: 'Session Dropped.'":
                 if not ignore_exceptions:
@@ -870,7 +870,7 @@ class _TTPEditContext(object):
         self._lock_error = None
         try:
             self._entity = ttp._call_method(method, *args, **kwdargs)
-        except TTPAPIError, e:
+        except TTPAPIError as e:
             self._lock_error = e
             if (ignoreEditLockError and e.fault and e.fault.detail == '22'):
                 ## Someone else has this entity locked.
@@ -902,7 +902,7 @@ class _TTPEditContext(object):
         if exc_type:
             try:
                 self.cancelSave()
-            except Exception, e:
+            except Exception as e:
                 logging.warn(
                     "Exception while attempting to release an edit lock "
                     "with a call to: " + self._cancel_name +
@@ -911,7 +911,7 @@ class _TTPEditContext(object):
         else:
             try:
                 self.save()
-            except Exception, e:
+            except Exception as e:
                 self._errored = True
                 logging.warn(
                     "Exception while attempting to release an edit lock "
@@ -919,7 +919,7 @@ class _TTPEditContext(object):
                     "\n    Error: " + str(e))
                 try:
                     self.cancelSave()
-                except Exception, ex:
+                except Exception as ex:
                     logging.warn(
                         "Exception while attempting to release an edit lock "
                         "with a call to: " + self._cancel_name +

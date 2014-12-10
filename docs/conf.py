@@ -43,8 +43,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'testtrackpro'
-copyright = u'2013, ' + testtrackpro.__author__
+project = 'testtrackpro'
+copyright = '2013, ' + testtrackpro.__author__
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -189,8 +189,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'testtrackpro.tex', u'testtrackpro Documentation',
-   u'Doug Napoleone', 'manual'),
+  ('index', 'testtrackpro.tex', 'testtrackpro Documentation',
+   'Doug Napoleone', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -219,8 +219,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'testtrackpro', u'testtrackpro Documentation',
-     [u'Doug Napoleone'], 1)
+    ('index', 'testtrackpro', 'testtrackpro Documentation',
+     ['Doug Napoleone'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -233,8 +233,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'testtrackpro', u'testtrackpro Documentation',
-   u'Doug Napoleone', 'testtrackpro', 'One line description of project.',
+  ('index', 'testtrackpro', 'testtrackpro Documentation',
+   'Doug Napoleone', 'testtrackpro', 'One line description of project.',
    'Miscellaneous'),
 ]
 

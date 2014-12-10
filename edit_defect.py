@@ -37,7 +37,7 @@ def login():
                 project = p
         if project == None:
             logging.error("Invalid project name: %s", projectName)
-            print "Invalid project name: ", projectName
+            print("Invalid project name: ", projectName)
             sys.exit(-1)
 
         ttp.ProjectLogon(project)
@@ -49,14 +49,14 @@ def login():
             except KeyboardInterrupt:
                 logging.info("... interrupted")
 
-            except Exception,e:
+            except Exception as e:
                 logging.error("User '%s' does not have access to TestTrack issues", username)
                 return None
                 
         except KeyboardInterrupt:
             logging.info("... interrupted")
 
-        except Exception,e:
+        except Exception as e:
             logging.debug("Login failed, exception raised")
 
         retry_count = retry_count + 1
@@ -115,10 +115,10 @@ def main():
         logging.info("Successfully edited defect #%s",defectNumber)
         return 0
 
-    except Exception, e:
+    except Exception as e:
         logging.error("Failed editing defect #%s",defectNumber)
         logging.debug(e)
-        print e
+        print(e)
         return -1
         
 #----------------------------------------------------------------------------
