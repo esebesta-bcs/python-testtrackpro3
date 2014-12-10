@@ -823,7 +823,7 @@ def was_saved(edit_context_entity):
     """
     return _get_context(edit_context_entity).saved
 
-class _long(long):
+class _long(int):
     pass
 
 class _TTPEditContext(object):
