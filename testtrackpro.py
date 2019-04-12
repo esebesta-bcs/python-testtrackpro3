@@ -175,6 +175,7 @@ Module Documentation
 import logging
 import re
 import suds
+import suds.client
 import contextlib
 import functools
 import urllib.parse
